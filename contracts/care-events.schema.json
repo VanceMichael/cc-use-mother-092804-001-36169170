@@ -1,0 +1,68 @@
+{
+  "title": "跨境旅居动物照护事件信封契约",
+  "description": "每条入链照护事件的结构。事件只能追加，seq/hash/prev_hash 由台账赋值。",
+  "type": "object",
+  "required": [
+    "seq",
+    "event_id",
+    "event_type",
+    "occurred_at",
+    "recorded_at",
+    "actor_id",
+    "phase",
+    "scope",
+    "visible_to",
+    "body",
+    "prev_hash",
+    "hash"
+  ],
+  "properties": {
+    "seq": { "type": "integer", "minimum": 0 },
+    "event_id": { "type": "string", "pattern": "^evt_[0-9a-f]{16}$" },
+    "event_type": {
+      "type": "string",
+      "enum": [
+        "CARE_PLAN_CREATED",
+        "CARE_PLAN_REVISED",
+        "PHASE_GATE",
+        "HEALTH_ASSESSMENT",
+        "VET_CONCLUSION",
+        "CRATE_SEALED",
+        "FLIGHT_EVENT",
+        "FEEDING",
+        "MEDICATION",
+        "OBSERVATION",
+        "BATCH_DISPATCHED",
+        "EFFECT_STARTED",
+        "EFFECT_RESOLVED",
+        "TRANSFER_OF_CARE",
+        "REPORT_UPLOADED",
+        "REVIEW_OPENED",
+        "REVIEW_RESOLVED"
+      ]
+    },
+    "occurred_at": { "type": "string", "format": "date-time" },
+    "recorded_at": { "type": "string", "format": "date-time" },
+    "actor_id": { "type": "string", "minLength": 1 },
+    "phase": { "type": "string", "enum": ["PRE_DEPARTURE", "CRATING", "FLIGHT", "ADAPTATION"] },
+    "scope": { "$ref": "#/$defs/scope" },
+    "visible_to": { "type": "string", "enum": ["CN", "US", "BOTH"] },
+    "body": { "type": "object" },
+    "prev_hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" },
+    "hash": { "type": "string", "pattern": "^[0-9a-f]{64}$" }
+  },
+  "additionalProperties": false,
+  "$defs": {
+    "scope": {
+      "type": "object",
+      "required": ["animal_ids", "plan_item_ids", "batch_ids", "phase_limited"],
+      "properties": {
+        "animal_ids": { "type": "array", "items": { "type": "string" } },
+        "plan_item_ids": { "type": "array", "items": { "type": "string" } },
+        "batch_ids": { "type": "array", "items": { "type": "string" } },
+        "phase_limited": { "type": "boolean" }
+      },
+      "additionalProperties": false
+    }
+  }
+}
